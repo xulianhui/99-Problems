@@ -138,37 +138,30 @@ def randomPermute[T](list:List[T]):List[T] = {
   randomSelect(list.length, list)
 }
 //26
-/*
-def combinations[A, B](n:Int, list:List[A]):List[List[A]] = {
-  var res:List[List[A]] = Nil
-  def cmb(n:Int, list:List[A], re:List[A]):Unit = {
-    if (n > list.length) Nil
-    if (n == 0) {
-      res = re :: res
-    }
-    else {
-      val tail = list.tail
-      cmb(n-1, tail, list.head :: re)
-      cmb(n, tail, re)
-    }
+def combinations(n:Int, li:List[Symbol]) : List[List[Symbol]] = {
+
+  def combinationsEx(n:Int, li:List[Symbol], as:List[Symbol]) : List[List[Symbol]] = {
+    if (n > 0 && li.length == 0) {
+      Nil
+    } else if (n == 0) {
+      List(as)
+    } else if (li.length > 0) {
+      (combinationsEx(n-1, li.tail, as :+ li.head) foldRight (combinationsEx(n, li.tail, as))) {
+        (e, s) => (e :: s)
+      } 
+    } else Nil
   }
-  cmb(n, list, Nil)
-  res
-}
-*/
-object P26 {
-  def flatMapSublists[A,B](ls: List[A])(f: (List[A]) => List[B]): List[B] = 
-    ls match {
-      case Nil => Nil
-      case sublist@(_ :: tail) => f(sublist) ::: flatMapSublists(tail)(f)
-    }
-
-  def combinations[A](n: Int, ls: List[A]): List[List[A]] =
-    if (n == 0) List(Nil)
-    else flatMapSublists(ls) { sl =>
-      combinations(n - 1, sl.tail) map {sl.head :: _}
-    }
+  combinationsEx(n, li, Nil)
 }
 
-flatMapSublists(List(1, 2, 3, 4))(sl => {println(sl), sl})
+def group3(ls: List[Symbol]): List[List[List[Symbol]]] = {
+  combinations(2, ls) map { a =>
 
+
+  }
+}
+
+for { 
+  a <- combinations(2, li) 
+  b <- a map (e => li.diff(e))
+} yield b
