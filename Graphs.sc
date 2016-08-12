@@ -10,8 +10,6 @@ abstract class GraphBase[T, U] {
   var nodes: Map[T, Node] = Map()
   var edges: List[Edge] = Nil
 
-  // If the edge E connects N to another node, returns the other node,
-  // otherwise returns None.
   def edgeTarget(e: Edge, n: Node): Option[Node]
 
   override def equals(o: Any) = o match {

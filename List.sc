@@ -138,9 +138,9 @@ def randomPermute[T](list:List[T]):List[T] = {
   randomSelect(list.length, list)
 }
 //26
-def combinations(n:Int, li:List[Symbol]) : List[List[Symbol]] = {
+def combinations[T](n:Int, li:List[T]) : List[List[T]] = {
 
-  def combinationsEx(n:Int, li:List[Symbol], as:List[Symbol]) : List[List[Symbol]] = {
+  def combinationsEx(n:Int, li:List[T], as:List[T]) : List[List[T]] = {
     if (n > 0 && li.length == 0) {
       Nil
     } else if (n == 0) {
@@ -153,15 +153,29 @@ def combinations(n:Int, li:List[Symbol]) : List[List[Symbol]] = {
   }
   combinationsEx(n, li, Nil)
 }
+//27
+def group3[T](ls: List[T]): List[List[List[T]]] = {
+  // val s = combinations(2, ls)
 
-def group3(ls: List[Symbol]): List[List[List[Symbol]]] = {
-  combinations(2, ls) map { a =>
-
-
+  for {
+    s <- combinations(2, ls)
+    no = ls diff s
+    c <- combinations(3, no)
+  } yield List(s, c, no diff c)
+}
+//28
+def group[T](li:List[Int], ls:List[T]):List[List[List[T]]] = {
+  li match {
+    case Nil => List(Nil)
+    case he :: tail => combinations(he, ls) flatMap { c =>
+        group(tail, ls diff c) map { c :: _}
+    }
   }
 }
+//29
+def lsort[T](li:List[List[T]]):List[List[T]] = {
+  li.sortBy( - _.length)
+}
 
-for { 
-  a <- combinations(2, li) 
-  b <- a map (e => li.diff(e))
-} yield b
+def positive(i: Int) : Try[Int] = 
+  if (i > 0) Success(i) else Failure(new AssertionError("assertion failed"))

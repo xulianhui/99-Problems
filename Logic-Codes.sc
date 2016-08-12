@@ -1,4 +1,4 @@
-//46
+/*//46
 def and(a:Boolean, b:Boolean):Boolean = a & b
 def or(a:Boolean, b:Boolean):Boolean = a | b
 def not(a:Boolean):Boolean = !a
@@ -33,40 +33,132 @@ def huffman[T](ls:List[(T, Int)]):List[T, Int] = {
   // List(("a", 1))
 }
 
-
-/*object P50 {
-  private abstract sealed class Tree[A] {
-    val freq: Int
-    def toCode: List[(A, String)] = toCodePrefixed("")
-    def toCodePrefixed(prefix: String): List[(A, String)]
-  }
-  private final case class InternalNode[A](left: Tree[A], right: Tree[A]) extends Tree[A] {
-    val freq: Int = left.freq + right.freq
-    def toCodePrefixed(prefix: String): List[(A, String)] =
-      left.toCodePrefixed(prefix + "0") ::: right.toCodePrefixed(prefix + "1")
-  }
-  private final case class LeafNode[A](element: A, freq: Int) extends Tree[A] {
-    def toCodePrefixed(prefix: String): List[(A, String)] = List((element, prefix))
-  }
-
-  def huffman[A](ls: List[(A, Int)]): List[(A, String)] = {
-    import collection.immutable.Queue
-    def dequeueSmallest(q1: Queue[Tree[A]], q2: Queue[Tree[A]]) = {
-      // This ordering chooses q1 in case of ties, which helps minimize tree
-      // depth.
-      if (q2.isEmpty) (q1.front, q1.dequeue._2, q2)
-      else if (q1.isEmpty || q2.front.freq < q1.front.freq) (q2.front, q1, q2.dequeue._2)
-      else (q1.front, q1.dequeue._2, q2)
+*/
+class Logic(a:Boolean) {
+  def and(b:Boolean) : Boolean = {
+    (a, b) match {
+      case (true, true) => true
+      case _ => false
     }
-    def huffmanR(q1: Queue[Tree[A]], q2: Queue[Tree[A]]): List[(A, String)] = {
-      if (q1.length + q2.length == 1) (if (q1.isEmpty) q2.front else q1.front).toCode
-      else {
-        val (v1, q3, q4) = dequeueSmallest(q1, q2)
-        val (v2, q5, q6) = dequeueSmallest(q3, q4)
-        huffmanR(q5, q6.enqueue(InternalNode(v1, v2)))
+  }
+
+  def or(b:Boolean) : Boolean = {
+    (a, b) match {
+      case (false, false) => false
+      case _ => true
+    }
+  }
+
+  def xor(b:Boolean) : Boolean = {
+    (a, b) match {
+      case (true, false) => true
+      case (false, true) => true
+      case _ => false
+    }
+  }
+
+  def equ(b:Boolean) : Boolean = {
+    (a, b) match {
+      case (true, true) => true
+      case (false, false) => true
+      case _ => false
+    }
+  }
+
+  def nand(b:Boolean) : Boolean = {
+    Logic.not(Logic.and(a, b))
+  }
+
+  def nor(b:Boolean) : Boolean = {
+    Logic.not(Logic.or(a, b))
+  }
+  
+  def impl(b:Boolean) : Boolean = {
+    Logic.or(Logic.not(a), b)
+  }
+}
+
+object Logic {
+  //46
+  def and(a:Boolean, b:Boolean) : Boolean = {
+    (a, b) match {
+      case (true, true) => true
+      case _ => false
+    }
+  }
+
+  def or(a:Boolean, b:Boolean) : Boolean = {
+    (a, b) match {
+      case (false, false) => false
+      case _ => true
+    }
+  }
+
+  def not(a:Boolean) : Boolean = {
+    a match {
+      case true => false
+      case false => true
+    }
+  }
+
+  def xor(a:Boolean, b:Boolean) : Boolean = {
+    (a, b) match {
+      case (true, false) => true
+      case (false, true) => true
+      case _ => false
+    }
+  }
+
+  def equ(a:Boolean, b:Boolean) : Boolean = {
+    (a, b) match {
+      case (true, true) => true
+      case (false, false) => true
+      case _ => false
+    }
+  }
+
+  def nand(a:Boolean, b:Boolean) : Boolean = {
+    not(and(a, b))
+  }
+
+  def nor(a:Boolean, b:Boolean) : Boolean = {
+    not(or(a, b))
+  }
+  
+  def impl(a:Boolean, b:Boolean) : Boolean = {
+    or(not(a), b)
+  }
+  //47
+  def table2(f:(Boolean, Boolean) => Boolean):Unit = {
+    println("a\tb\tf(a, b)")  
+    Seq(true, false) map { a => 
+      Seq(true, false) map { b => 
+        println(s"${a}\t${b}\t${f(a, b)}")
       }
     }
-    huffmanR(Queue.Empty.enqueue(ls sort { _._2 < _._2 } map { e => LeafNode(e._1, e._2) }),
-             Queue.Empty)
   }
-}*/
+  //48
+  def table3(f:(Boolean, Boolean, Boolean) => Boolean):Unit = {
+    println("a\tb\tc\tf(a, b)")  
+    Seq(true, false) map { a => 
+      Seq(true, false) map { b => 
+        Seq(true, false) map { c => 
+          println(s"${a}\t${b}\t${c}\t${f(a, b, c)}")
+        }
+      }
+    }
+  }
+  //49
+  def gray(n:Int):List[String] = {
+    def C(c:Int) : String = {
+      def CEx(c:Int, n:Int) : String = n match {
+        case 1 => if (c == 1) "1" else "0"
+        case s @ _ => CEx(c >> 1, n-1) + (if (((c & 1) ^ ((c >> 1) & 1)) == 1) "1" else "0")
+      }
+      CEx(c, n)
+    }
+    ((0 until 1 << n) toList) map { C(_)}
+  }
+  //50
+  
+}

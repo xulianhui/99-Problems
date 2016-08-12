@@ -1,27 +1,27 @@
 class PInt(n:Int) {
-//31
+  //31
   def isPrime:Boolean = {
     Range(2, Math.sqrt(n).toInt + 1) map { md => 
       if (n % md == 0) return false
     }
     true
   }
-//32
+  //32
   def gcd(a:Int, b:Int):Int = if(b == 0) a else gcd(b, a % b)
-//33 
+  //33 
   def isCoprimeTo(v:Int):Boolean = {
     gcd(n, v) == 1
   }
-//34
+  //34
   def totient:Int = (1 to n) filter (n isCoprimeTo(_)) length
-//35
+  //35
   def primeFactors:List[Int] = {
     List.range(2, n) filter (_ isPrime) flatMap {
       case x if (n % x == 0) => List(x)/*.fill(n / x)*/
       case _ => Nil   
     }
   }
-//36
+  //36
   def getC (n:Int, x:Int):Int = {
     n match {
       case c if (c % x == 0) => 1 + getC(n / x, x)
