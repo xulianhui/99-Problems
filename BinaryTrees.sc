@@ -11,7 +11,7 @@ sealed abstract class Tree[+T] {
   def inorder:List[T]
   def toDotstring:String
   def layoutBinaryTreeTightEx:Node[Int]
-  // def toString:String
+  def layoutBinaryTreeTightPos(lv:Int, p:Int):Unit
 }
 
 case class Node[+T](value: T, left: Tree[T], right: Tree[T]) extends Tree[T] {
@@ -66,21 +66,34 @@ case class Node[+T](value: T, left: Tree[T], right: Tree[T]) extends Tree[T] {
     lc + rc + 1
   }
 
-  def layoutBinaryTreeTightEx:Node[Int] = {
-    (left, right) match {
-      case (End, End) => Node(1)
-      case _ => {
-        val le = left.layoutBinaryTreeTightEx
-        val re = right.layoutBinaryTreeTightEx
-        Node(Math.max(le.value + 1, re.value - 1), le, re)
-      }
-    }
-  }
 
   def layoutBinaryTreeTight:Unit = {
     // println(layoutBinaryTreeTightEx)
+    def layoutBinaryTreeTightEx:Node[Int] = {
+      (left, right) match {
+        case (End, End) => Node(1)
+        case _ => {
+          val le = left.layoutBinaryTreeTightEx
+          val re = right.layoutBinaryTreeTightEx
+          Node(Math.max(le.value + 1, re.value - 1), le, re)
+        }
+      }
+    }
+
+    def layoutBinaryTreeTightPos(lv:Int, p:Int):Unit = {
+      // T : Int =>
+      (left, right) match {
+        case (End, End) => println(s"($lv, $p)")
+        case _ => {
+          left.layoutBinaryTreeTightPos(lv+1, Math.max(p-1, value))
+          right.layoutBinaryTreeTightPos(lv+1, Math.max(p+1, value))
+        }
+      }
+    }
+
     val s = layoutBinaryTreeTightEx                     // poison
 
+    s.layoutBinaryTreeTightPos(1, s.value)
   }
 
   override def toString:String = {
@@ -99,6 +112,7 @@ case class Node[+T](value: T, left: Tree[T], right: Tree[T]) extends Tree[T] {
 
 case object End extends Tree[Nothing] {
   // def preInTree(pre:List[T], in:List[T]):Tree[T] 
+  def layoutBinaryTreeTightPos(lv:Int, p:Int):Unit = {}
   def layoutBinaryTreeTightEx = Node(0)
   def toDotstring:String = "."
   def preorder = Nil
